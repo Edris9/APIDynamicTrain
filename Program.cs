@@ -1,3 +1,7 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using MinForstaApi.Validators;
+
 namespace MinForstaApi
 {
     public class Program
@@ -9,6 +13,9 @@ namespace MinForstaApi
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddValidatorsFromAssemblyContaining<ProductValidator>();  // Hittar alla validators
 
             var app = builder.Build();
 

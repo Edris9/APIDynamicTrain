@@ -4,7 +4,7 @@ using MinForstaApi.Models;
 namespace MinForstaApi.Controllers
 {
     [ApiController]
-    [Route("api/product")]
+    [Route("api/products")]
     public class ProductController : ControllerBase
     {
         private static List<Product> products = new List<Product>
@@ -30,18 +30,14 @@ namespace MinForstaApi.Controllers
         [HttpPost]
         public ActionResult<Product> Create(Product product)
         {
-            product.Id = products.Max(p => p.Id) + 1;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            product.Id = products.Any() ? products.Max(p => p.Id) + 1 : 1;
             products.Add(product);
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            var product = products.FirstOrDefault(p => p.Id == id);
-            if (product == null) return NotFound();
-            products.Remove(product);
-            return NoContent();
         }
 
         [HttpPut("{id}")]
@@ -54,6 +50,15 @@ namespace MinForstaApi.Controllers
             product.Price = updatedProduct.Price;
 
             return Ok(product);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            var product = products.FirstOrDefault(p => p.Id == id);
+            if (product == null) return NotFound();
+            products.Remove(product);
+            return NoContent();
         }
     }
 }
