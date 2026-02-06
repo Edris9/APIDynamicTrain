@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MinForstaApi.Validators;
 
+
 namespace MinForstaApi
 {
     public class Program
@@ -16,6 +17,7 @@ namespace MinForstaApi
 
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddValidatorsFromAssemblyContaining<ProductValidator>();  // Hittar alla validators
+            builder.Services.AddHttpClient<Services.FakeStoreService>();  // Lägger till vår service som kan prata med externa API:et
 
             var app = builder.Build();
 
